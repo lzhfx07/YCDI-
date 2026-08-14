@@ -1,0 +1,361 @@
+<!DOCTYPE html>
+<!--
+  HOW TO EDIT
+  -----------
+  Everything about you lives in the CONFIG object near the bottom,
+  inside the <script> tag (search for "EDIT ME"). Change the name,
+  tagline, bio and links there — you don't need to touch the CSS or
+  animation code at all.
+
+  There are two link slots ready to go — just fill in "label" and
+  "value" for each once you have them. "value" can be mailto:, tel:,
+  wa.me, or a full https:// URL. "icon" is 1-3 characters shown in
+  the little badge next to the link.
+
+  HOW TO SHARE THIS AS A LINK
+  ----------------------------
+  This file works right now if you just double-click it, but a file on
+  your computer isn't a link. To get a shareable URL, upload it to a
+  free static host, e.g.:
+    - Netlify Drop (netlify.com/drop) — drag the file in, get a link instantly
+    - GitHub Pages — push it to a repo and enable Pages
+    - Vercel — same idea, drag-and-drop deploy
+-->
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Zong Han — Say Hi</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Special+Elite&family=Space+Grotesk:wght@400;500;600;700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --ink:#fff4da;
+    --ink-soft:#ffffff;
+    --kraft:#ff8fa3;
+    --kraft-dark:#ff5c7a;
+    --gold:#ffcf3e;
+    --forest:#2ec4b6;
+    --paper:#2d2d2d;
+    --paper-dim:#6b6b6b;
+  }
+
+  *{ box-sizing:border-box; }
+
+  html,body{
+    margin:0;
+    min-height:100vh;
+    background:var(--ink);
+    color:var(--paper);
+    font-family:'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+  }
+
+  body{
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    padding:6vh 20px;
+    position:relative;
+    overflow-x:hidden;
+  }
+
+  /* slow ambient drift behind the card — no click needed to enjoy it */
+  .ambient-bg{
+    position:fixed;
+    inset:-10%;
+    z-index:0;
+    pointer-events:none;
+    background-image:
+      radial-gradient(circle at 20% 30%, rgba(255,207,62,0.28) 0, transparent 40%),
+      radial-gradient(circle at 80% 70%, rgba(46,196,182,0.24) 0, transparent 45%),
+      radial-gradient(circle at 50% 100%, rgba(255,143,163,0.22) 0, transparent 50%);
+    animation:drift 16s ease-in-out infinite alternate;
+  }
+
+  @keyframes drift{
+    0%{ transform:translate(0,0) scale(1); }
+    100%{ transform:translate(-2%, 2%) scale(1.06); }
+  }
+
+  .stage{
+    position:relative;
+    width:100%;
+    max-width:480px;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+  }
+
+  /* ---------- CARD ---------- */
+
+  .card{
+    position:relative;
+    z-index:1;
+    display:flex;
+    flex-direction:column;
+    align-items:center;
+    text-align:center;
+    width:100%;
+    max-width:400px;
+    padding:40px 28px 32px;
+    background:var(--ink-soft);
+    border:1px solid rgba(217,164,65,0.18);
+    border-radius:16px;
+    box-shadow:0 30px 60px rgba(0,0,0,0.35);
+  }
+
+  /* fun staggered pop-in for every direct piece of content */
+  .reveal{
+    opacity:0;
+    animation:pop-in .6s cubic-bezier(.34,1.56,.64,1) both;
+    animation-delay:var(--d, 0s);
+  }
+
+  @keyframes pop-in{
+    0%{ opacity:0; transform:translateY(18px) scale(.9); }
+    70%{ opacity:1; }
+    100%{ opacity:1; transform:translateY(0) scale(1); }
+  }
+
+  .card__avatar-wrap{
+    position:relative;
+    margin-bottom:16px;
+  }
+
+  .card__avatar{
+    width:64px;
+    height:64px;
+    border-radius:50%;
+    overflow:hidden;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    background:linear-gradient(135deg, var(--kraft) 0%, var(--forest) 100%);
+    font-family:'Space Grotesk', sans-serif;
+    font-weight:700;
+    font-size:20px;
+    color:#ffffff;
+    box-shadow:0 8px 18px rgba(0,0,0,0.25);
+    transition:transform .3s cubic-bezier(.34,1.56,.64,1);
+  }
+
+  .card__avatar:hover{
+    transform:scale(1.08) rotate(-4deg);
+  }
+
+  /* a little celebratory sparkle burst around the avatar on load */
+  .confetti{
+    position:absolute;
+    inset:0;
+    pointer-events:none;
+  }
+
+  .confetti span{
+    position:absolute;
+    top:50%;
+    left:50%;
+    width:6px;
+    height:6px;
+    border-radius:2px;
+    opacity:0;
+    animation:confetti-burst .8s ease-out both;
+    animation-delay:.55s;
+  }
+
+  .confetti span:nth-child(1){ background:var(--gold);   --tx:-40px; --ty:-30px; --r:-40deg; }
+  .confetti span:nth-child(2){ background:var(--forest); --tx:42px;  --ty:-26px; --r:35deg;  }
+  .confetti span:nth-child(3){ background:var(--kraft);  --tx:-46px; --ty:14px;  --r:-20deg; }
+  .confetti span:nth-child(4){ background:var(--gold);   --tx:46px;  --ty:18px;  --r:25deg;  }
+  .confetti span:nth-child(5){ background:var(--forest); --tx:-14px; --ty:-44px; --r:-60deg; }
+  .confetti span:nth-child(6){ background:var(--kraft);  --tx:16px;  --ty:-44px; --r:60deg;  }
+
+  @keyframes confetti-burst{
+    0%{ opacity:1; transform:translate(-50%,-50%) rotate(0) scale(1); }
+    100%{ opacity:0; transform:translate(calc(-50% + var(--tx)), calc(-50% + var(--ty))) rotate(var(--r)) scale(.4); }
+  }
+
+  .card__eyebrow{
+    font-family:'Special Elite', 'Courier New', monospace;
+    font-size:12px;
+    letter-spacing:0.6px;
+    color:var(--gold);
+    margin:0 0 4px;
+  }
+
+  .card__name{
+    font-family:'Space Grotesk', sans-serif;
+    font-weight:700;
+    font-size:clamp(26px, 6vw, 32px);
+    margin:0 0 6px;
+    color:var(--paper);
+  }
+
+  .card__tagline{
+    font-size:14px;
+    color:var(--paper-dim);
+    margin:0 0 18px;
+    line-height:1.5;
+  }
+
+  .card__bio{
+    font-size:14px;
+    line-height:1.6;
+    color:var(--paper);
+    opacity:0.9;
+    margin:0 0 26px;
+    max-width:320px;
+  }
+
+  .card__links{
+    display:flex;
+    flex-direction:column;
+    gap:10px;
+    width:100%;
+  }
+
+  .link-pill{
+    display:flex;
+    align-items:center;
+    gap:12px;
+    width:100%;
+    padding:12px 16px;
+    background:rgba(45,45,45,0.03);
+    border:1px solid rgba(217,164,65,0.22);
+    border-radius:10px;
+    text-decoration:none;
+    color:var(--paper);
+    font-size:14px;
+    font-weight:500;
+    transition:transform .18s cubic-bezier(.34,1.56,.64,1), background .18s ease, border-color .18s ease;
+  }
+
+  .link-pill:hover, .link-pill:focus-visible{
+    transform:translateY(-3px) rotate(-0.6deg);
+    background:rgba(217,164,65,0.08);
+    border-color:var(--gold);
+  }
+
+  .link-pill__icon{
+    width:28px;
+    height:28px;
+    flex:none;
+    border-radius:50%;
+    background:var(--forest);
+    color:#ffffff;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    font-size:12px;
+    font-weight:700;
+    font-family:'Space Grotesk', sans-serif;
+  }
+
+  .card__closing{
+    margin:24px 0 0;
+    font-family:'Special Elite', 'Courier New', monospace;
+    font-size:12px;
+    color:var(--paper-dim);
+  }
+
+  @media (prefers-reduced-motion: reduce){
+    .ambient-bg{ animation:none; }
+    .reveal, .card__avatar, .link-pill, .confetti span{
+      animation:none !important;
+      transition:none !important;
+      opacity:1 !important;
+      transform:none !important;
+    }
+  }
+</style>
+</head>
+<body>
+
+<div class="ambient-bg" aria-hidden="true"></div>
+
+<main class="stage">
+  <section class="card">
+    <div class="card__avatar-wrap reveal" style="--d:.05s">
+      <div class="card__avatar" id="avatar">--</div>
+      <div class="confetti" aria-hidden="true">
+        <span></span><span></span><span></span>
+        <span></span><span></span><span></span>
+      </div>
+    </div>
+    <p class="card__eyebrow reveal" style="--d:.15s">hey, it's</p>
+    <h1 class="card__name reveal" id="cardName" style="--d:.22s">—</h1>
+    <p class="card__tagline reveal" id="cardTagline" style="--d:.29s">—</p>
+    <p class="card__bio reveal" id="cardBio" style="--d:.36s">—</p>
+    <div class="card__links" id="links"></div>
+    <p class="card__closing reveal" id="closingNote"></p>
+  </section>
+</main>
+
+<script>
+  /* =========================================================
+     EDIT ME — everything about you lives here.
+     Swap in your real name, tagline, bio, and links.
+     For "value": use mailto:, tel:, wa.me, or a full https:// URL.
+     "icon" is just 1-3 characters shown in the little badge.
+     ========================================================= */
+  const CONFIG = {
+    name: "Zong Han",
+    initials: "ZH",
+    // Leave photo as "" to show your initials in a circle instead.
+    photo: "",
+    tagline: "VJC · YCDI volunteer team · community builder",
+    bio: "Thanks for stopping by! Here's how to find me — happy to chat about anything from Physics to youth volunteering.",
+    closingNote: "— see you around",
+    // Fill these two in whenever you're ready.
+    links: [
+      { label: "Link one — coming soon", value: "#", icon: "1" },
+      { label: "Link two — coming soon", value: "#", icon: "2" }
+    ]
+  };
+
+  // ---- render content from CONFIG ----
+  const avatarEl = document.getElementById('avatar');
+  if (CONFIG.photo) {
+    avatarEl.textContent = '';
+    const img = document.createElement('img');
+    img.src = CONFIG.photo;
+    img.alt = CONFIG.name;
+    img.style.width = '100%';
+    img.style.height = '100%';
+    img.style.objectFit = 'cover';
+    img.style.borderRadius = '50%';
+    avatarEl.appendChild(img);
+  } else {
+    avatarEl.textContent = CONFIG.initials;
+  }
+  document.getElementById('cardName').textContent = CONFIG.name;
+  document.getElementById('cardTagline').textContent = CONFIG.tagline;
+  document.getElementById('cardBio').textContent = CONFIG.bio;
+  document.getElementById('closingNote').textContent = CONFIG.closingNote;
+
+  const linksEl = document.getElementById('links');
+  const LINK_START_DELAY = 0.43; // seconds, right after the bio pops in
+  const LINK_STEP = 0.09;
+
+  CONFIG.links.forEach((link, i) => {
+    const a = document.createElement('a');
+    a.className = 'link-pill reveal';
+    a.style.setProperty('--d', `${LINK_START_DELAY + i * LINK_STEP}s`);
+    a.href = link.value;
+    if (link.value.startsWith('http')) {
+      a.target = '_blank';
+      a.rel = 'noopener noreferrer';
+    }
+    a.innerHTML = `<span class="link-pill__icon">${link.icon}</span><span>${link.label}</span>`;
+    linksEl.appendChild(a);
+  });
+
+  // closing note pops in right after the links, whatever their count
+  document.getElementById('closingNote').style.setProperty(
+    '--d',
+    `${LINK_START_DELAY + CONFIG.links.length * LINK_STEP + 0.05}s`
+  );
+</script>
+
+</body>
+</html>
